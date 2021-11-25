@@ -9,9 +9,9 @@ $APPLICATION->SetPageProperty("NOT_SHOW_NAV_CHAIN", "Y");
         Последние новости<br>
     </h3>
 <h2 class="blog-post-title"><?$APPLICATION->IncludeComponent(
-	"bitrix:news.list",
-	"news_index",
-	Array(
+	"bitrix:news.list", 
+	"news_index", 
+	array(
 		"ACTIVE_DATE_FORMAT" => "j M Y",
 		"ADD_SECTIONS_CHAIN" => "Y",
 		"AJAX_MODE" => "N",
@@ -31,7 +31,10 @@ $APPLICATION->SetPageProperty("NOT_SHOW_NAV_CHAIN", "Y");
 		"DISPLAY_PICTURE" => "Y",
 		"DISPLAY_PREVIEW_TEXT" => "Y",
 		"DISPLAY_TOP_PAGER" => "N",
-		"FIELD_CODE" => array("",""),
+		"FIELD_CODE" => array(
+			0 => "DATE_ACTIVE_FROM",
+			1 => "",
+		),
 		"FILE_404" => "",
 		"FILTER_NAME" => "",
 		"HIDE_LINK_WHEN_NO_DETAIL" => "N",
@@ -51,7 +54,10 @@ $APPLICATION->SetPageProperty("NOT_SHOW_NAV_CHAIN", "Y");
 		"PARENT_SECTION" => "",
 		"PARENT_SECTION_CODE" => "",
 		"PREVIEW_TRUNCATE_LEN" => "",
-		"PROPERTY_CODE" => array("",""),
+		"PROPERTY_CODE" => array(
+			0 => "",
+			1 => "",
+		),
 		"SET_BROWSER_TITLE" => "Y",
 		"SET_LAST_MODIFIED" => "N",
 		"SET_META_DESCRIPTION" => "Y",
@@ -63,8 +69,10 @@ $APPLICATION->SetPageProperty("NOT_SHOW_NAV_CHAIN", "Y");
 		"SORT_BY2" => "SORT",
 		"SORT_ORDER1" => "DESC",
 		"SORT_ORDER2" => "ASC",
-		"STRICT_SECTION_CHECK" => "N"
-	)
+		"STRICT_SECTION_CHECK" => "N",
+		"COMPONENT_TEMPLATE" => "news_index"
+	),
+	false
 );?><br>
  </h2>
  <br>

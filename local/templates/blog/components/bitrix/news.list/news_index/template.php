@@ -47,15 +47,13 @@ foreach ($arResult["ITEMS"] as $arItem): ?>
         </a>
     </h2>
     <p class="blog-post-meta">
-        <?
-        $arParams["DATE_CREATE"] = "j F Y";
-        echo CIBlockFormatProperties::DateFormat(
-            $arParams["DATE_CREATE"],
+        <? echo CIBlockFormatProperties::DateFormat(
+            $arParams["ACTIVE_DATE_FORMAT"],
             MakeTimeStamp(
-                $arElement["DATE_CREATE"],
+                $arItem["DATE_CREATE"],
                 CSite::GetDateFormat()
             )
-        ); ?>
+        );?>
     </p>
     <p>
         <?

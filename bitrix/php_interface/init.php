@@ -9,7 +9,5 @@ function FunctionName(params)
 }
 */
 
-const DEFAULT_TEMPLATE_PATH = "/local/templates/blog";
-
 ?>
 

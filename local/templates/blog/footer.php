@@ -11,17 +11,6 @@
     </p>
 </footer>
 
-<!-- Bootstrap core JavaScript
-================================================== -->
-<!-- Placed at the end of the document so the pages load faster -->
-<?php
-    Asset::getInstance()->addJs(DEFAULT_TEMPLATE_PATH . '/js/jquery-3.2.1.slim.min.js');
-    Asset::getInstance()->addJs(DEFAULT_TEMPLATE_PATH . '/js/jquery-slim.min.js');
-    Asset::getInstance()->addJs(DEFAULT_TEMPLATE_PATH . '/js/popper.min.js');
-    Asset::getInstance()->addJs(DEFAULT_TEMPLATE_PATH . '/js/bootstrap.min.js');
-    Asset::getInstance()->addJs(DEFAULT_TEMPLATE_PATH . '/js/holder.min.js');
-?>
-
 <script>
     Holder.addTheme('thumb', {
         bg: '#55595c',

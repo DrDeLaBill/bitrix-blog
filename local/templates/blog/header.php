@@ -9,7 +9,6 @@ if (!defined("B_PROLOG_INCLUDED") || B_PROLOG_INCLUDED !== true) {
 use Bitrix\Main\Page\Asset;
 
 $APPLICATION->SetPageProperty("title", "Блог");
-$APPLICATION->SetTitle('Блог');
 
 ?>
 
@@ -17,21 +16,23 @@ $APPLICATION->SetTitle('Блог');
 
 <html lang="ru">
 <head>
-    <title><? $APPLICATION->ShowTitle(); ?></title>
+    <title><?
+        $APPLICATION->ShowTitle(); ?></title>
     <?php
     $APPLICATION->ShowHead();
-    Asset::getInstance()->addCss(DEFAULT_TEMPLATE_PATH . '/css/bootstrap.min.css');
-    Asset::getInstance()->addCss(DEFAULT_TEMPLATE_PATH . '/css/css');
-    Asset::getInstance()->addCss(DEFAULT_TEMPLATE_PATH . '/css/blog.css');
-    Asset::getInstance()->addString('<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">');
-    Asset::getInstance()->addString(
-        '<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">'
-    );
-    Asset::getInstance()->addString('<meta name="description" content="">');
-    Asset::getInstance()->addString('<meta name="author" content="">');
-    Asset::getInstance()->addString('<link rel="icon" href="' . DEFAULT_TEMPLATE_PATH . '/favicon.ico">');
-    //Asset::getInstance()->addString('<link rel="canonical" href="https://getbootstrap.com/docs/4.0/examples/blog/">');
+    Asset::getInstance()->addCss($APPLICATION->GetTemplatePath('css/bootstrap.min.css'));
+    Asset::getInstance()->addCss($APPLICATION->GetTemplatePath('css/fonts.css'));
+    Asset::getInstance()->addCss($APPLICATION->GetTemplatePath('css/blog.css'));
+    Asset::getInstance()->addJs($APPLICATION->GetTemplatePath('js/jquery-3.2.1.slim.min.js'));
+    Asset::getInstance()->addJs($APPLICATION->GetTemplatePath('js/jquery-slim.min.js'));
+    Asset::getInstance()->addJs($APPLICATION->GetTemplatePath('js/popper.min.js'));
+    Asset::getInstance()->addJs($APPLICATION->GetTemplatePath('js/bootstrap.min.js'));
+    Asset::getInstance()->addJs($APPLICATION->GetTemplatePath('js/holder.min.js'));
     ?>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="description" content="">
+    <meta name="author" content="">
 </head>
 
 <body>
@@ -51,7 +52,7 @@ $APPLICATION->SetTitle('Блог');
                     $APPLICATION->ShowTitle(); ?></a>
             </div>
             <div class="col-4 d-flex justify-content-end align-items-center">
-                <a class="text-muted" href="/novosti/obratnaya-svyaz.php">
+                <a class="text-muted" href="/kontakty/">
                     Обратная связь
                 </a>
             </div>
@@ -62,8 +63,8 @@ $APPLICATION->SetTitle('Блог');
         <nav class="nav d-flex justify-content-between">
             <?
             $APPLICATION->IncludeComponent(
-	"bitrix:catalog.section.list", 
-	"categoties", 
+                "bitrix:catalog.section.list",
+                "categories",
                 array(
                     "ADD_SECTIONS_CHAIN" => "Y",
                     "CACHE_FILTER" => "N",
@@ -81,7 +82,6 @@ $APPLICATION->SetTitle('Блог');
                         0 => "",
                         1 => "",
                     ),
-                    "SECTION_ID" => $_REQUEST["SECTION_ID"],
                     "SECTION_URL" => "#SITE_DIR#/novosti/#SECTION_CODE#/",
                     "SECTION_USER_FIELDS" => array(
                         0 => "",
@@ -98,162 +98,191 @@ $APPLICATION->SetTitle('Блог');
 
 
     <?php
-    if (CModule::IncludeModule('iblock')) {
-        $arSort = array("NAME" => "ASC");
-        $arSelect = array("ID", "NAME", "PREVIEW_TEXT", "DETAIL_PAGE_URL", "PREVIEW_PICTURE");
-        $arFilter = array(
-            "IBLOCK_ID" => 4,
-            "NAME" => "Создание блога"
-        );
-
-        $blogCreationNews = CIBlockElement::GetList($arSort, $arFilter, false, false, $arSelect);
-        if ($blogCreationNews->SelectedRowsCount() == 0) {
-            ?>
-                <div class="jumbotron p-3 p-md-5 text-white rounded bg-dark">
-                    <div class="col-md-6 px-0">
-                        <h1 class="display-4 font-italic">Заголовок</h1>
-                        <p class="lead my-3">Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</p>
-                        <p class="lead mb-0"><a href="/novosti/" class="text-white font-weight-bold">Продолжить чтение...</a></p>
-                    </div>
-                </div>
-            <?
-        } else {
-            $blogCreationProperties = $blogCreationNews->GetNextElement()->GetFields();
-            ?>
-                <div class="jumbotron p-3 p-md-5 text-white rounded bg-dark">
-                    <div class="col-md-6 px-0">
-                        <h1 class="display-4 font-italic"><?
-                            echo $blogCreationProperties['NAME'] ?></h1>
-                        <p class="lead my-3"><?
-                            echo $blogCreationProperties['PREVIEW_TEXT'] ?></p>
-                        <p class="lead mb-0"><a href="<?
-                            echo $blogCreationProperties['DETAIL_PAGE_URL'] ?>"
-                                                class="text-white font-weight-bold">Продолжить чтение...</a></p>
-                    </div>
-                </div>
-        <?
-        }
-        ?>
-        <div class="row mb-2">
-            <?
-            $arFilter['NAME'] = "Одна важная запись";
-
-            $first = CIBlockElement::GetList($arSort, $arFilter, false, false, $arSelect);
-
-            if ($first->SelectedRowsCount() == 0) {
-                ?>
-                <div class="col-md-6">
-                    <div class="card flex-md-row mb-4 box-shadow h-md-250">
-                        <div class="card-body d-flex flex-column align-items-start">
-                            <h3 class="mb-0">
-                                <a class="text-dark" href="/novosti/">Заголовок 2<a>
-                            </h3>
-                            <p class="card-text mb-auto">
-                                Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
-                            </p>
-                            <a href="/novosti/">Продолжить чтение...</a>
-                        </div>
-                    </div>
-                </div>
-            <?
-            } else {
-                $firstProperties = $first->GetNextElement()->GetFields();
-                ?>
-                    <div class="col-md-6">
-                        <div class="card flex-md-row mb-4 box-shadow h-md-250">
-                            <div class="card-body d-flex flex-column align-items-start">
-                                <h3 class="mb-0">
-                                    <a class="text-dark" href="<? echo $firstProperties['DETAIL_PAGE_URL'] ?>"><?
-                                        echo $firstProperties['NAME'] ?><a>
-                                </h3>
-                                <div class="mb-1 text-muted">
-                                    <?
-                                    $firstProperties["DATE_CREATE"] = "j F";
-                                    echo CIBlockFormatProperties::DateFormat(
-                                        $firstProperties["DATE_CREATE"],
-                                        MakeTimeStamp(
-                                            $arElement["DATE_CREATE"],
-                                            CSite::GetDateFormat()
-                                        )
-                                    );
-                                    ?>
-                                </div>
-                                <p class="card-text mb-auto"><?
-                                    echo $firstProperties['PREVIEW_TEXT'] ?></p>
-                                <a href="<? echo $firstProperties['DETAIL_PAGE_URL'] ?>">Продолжить чтение...</a>
-                            </div>
-                            <img class="card-img-right flex-auto d-none d-md-block"
-                                 alt="Thumbnail [200x250]" style="width: 200px; height: 250px;"
-                                 src="<?
-                                 echo CFile::GetPath($firstProperties['PREVIEW_PICTURE']) ?>"
-                                 data-holder-rendered="true">
-                        </div>
-                    </div>
-                <?
-            }
-            ?>
-            <?
-            $arFilter['NAME'] = "Другая важная запись";
-
-            $second = CIBlockElement::GetList($arSort, $arFilter, false, false, $arSelect);
-
-            if ($first->SelectedRowsCount() == 0) {
-            ?>
-                <div class="col-md-6">
-                    <div class="card flex-md-row mb-4 box-shadow h-md-250">
-                        <div class="card-body d-flex flex-column align-items-start">
-                            <h3 class="mb-0">
-                                <a class="text-dark" href="/novosti/">Заголовок 3<a>
-                            </h3>
-                            <p class="card-text mb-auto">
-                                Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
-                            </p>
-                            <a href="/novosti/">Продолжить чтение...</a>
-                        </div>
-                    </div>
-                </div>
-            <?
-            } else {
-                $secondProperties = $second->GetNextElement()->GetFields();
-            ?>
-                <div class="col-md-6">
-                    <div class="card flex-md-row mb-4 box-shadow h-md-250">
-                        <div class="card-body d-flex flex-column align-items-start">
-                            <h3 class="mb-0">
-                                <a class="text-dark" href="<? echo $secondProperties['DETAIL_PAGE_URL'] ?>"><?
-                                    echo $secondProperties['NAME'] ?><a>
-                            </h3>
-                            <div class="mb-1 text-muted">
-                                <?
-                                $secondProperties["DATE_CREATE"] = "j F";
-                                echo CIBlockFormatProperties::DateFormat(
-                                    $firstProperties["DATE_CREATE"],
-                                    MakeTimeStamp(
-                                        $arElement["DATE_CREATE"],
-                                        CSite::GetDateFormat()
-                                    )
-                                );
-                                ?>
-                            </div>
-                            <p class="card-text mb-auto"><?
-                                echo $secondProperties['PREVIEW_TEXT'] ?></p>
-                            <a href="<? echo $secondProperties['DETAIL_PAGE_URL'] ?>">Продолжить чтение...</a>
-                        </div>
-                        <img class="card-img-right flex-auto d-none d-md-block"
-                             alt="Thumbnail [200x250]" style="width: 200px; height: 250px;"
-                             src="<?
-                             echo CFile::GetPath($secondProperties['PREVIEW_PICTURE']) ?>"
-                             data-holder-rendered="true">
-                    </div>
-                </div>
-            <?
-            }
-            ?>
-        </div>
-
-        <?
-    }
+    $APPLICATION->IncludeComponent(
+        "bitrix:news.detail",
+        "main_news",
+        array(
+            "ACTIVE_DATE_FORMAT" => "j F Y",    // Формат показа даты
+            "ADD_ELEMENT_CHAIN" => "N",    // Включать название элемента в цепочку навигации
+            "ADD_SECTIONS_CHAIN" => "Y",    // Включать раздел в цепочку навигации
+            "AJAX_MODE" => "N",    // Включить режим AJAX
+            "AJAX_OPTION_ADDITIONAL" => "",    // Дополнительный идентификатор
+            "AJAX_OPTION_HISTORY" => "N",    // Включить эмуляцию навигации браузера
+            "AJAX_OPTION_JUMP" => "N",    // Включить прокрутку к началу компонента
+            "AJAX_OPTION_STYLE" => "Y",    // Включить подгрузку стилей
+            "BROWSER_TITLE" => "-",    // Установить заголовок окна браузера из свойства
+            "CACHE_GROUPS" => "Y",    // Учитывать права доступа
+            "CACHE_TIME" => "36000000",    // Время кеширования (сек.)
+            "CACHE_TYPE" => "A",    // Тип кеширования
+            "CHECK_DATES" => "Y",    // Показывать только активные на данный момент элементы
+            "DETAIL_URL" => "",    // URL страницы детального просмотра (по умолчанию - из настроек инфоблока)
+            "DISPLAY_BOTTOM_PAGER" => "Y",    // Выводить под списком
+            "DISPLAY_DATE" => "Y",    // Выводить дату элемента
+            "DISPLAY_NAME" => "Y",    // Выводить название элемента
+            "DISPLAY_PICTURE" => "Y",    // Выводить детальное изображение
+            "DISPLAY_PREVIEW_TEXT" => "Y",    // Выводить текст анонса
+            "DISPLAY_TOP_PAGER" => "N",    // Выводить над списком
+            "ELEMENT_CODE" => "",    // Код новости
+            "ELEMENT_ID" => "13",    // ID новости
+            "FIELD_CODE" => array(    // Поля
+                0 => "",
+                1 => "",
+            ),
+            "IBLOCK_ID" => "4",    // Код информационного блока
+            "IBLOCK_TYPE" => "novosti",    // Тип информационного блока (используется только для проверки)
+            "IBLOCK_URL" => "",    // URL страницы просмотра списка элементов (по умолчанию - из настроек инфоблока)
+            "INCLUDE_IBLOCK_INTO_CHAIN" => "Y",    // Включать инфоблок в цепочку навигации
+            "MESSAGE_404" => "",    // Сообщение для показа (по умолчанию из компонента)
+            "META_DESCRIPTION" => "-",    // Установить описание страницы из свойства
+            "META_KEYWORDS" => "-",    // Установить ключевые слова страницы из свойства
+            "PAGER_BASE_LINK_ENABLE" => "N",    // Включить обработку ссылок
+            "PAGER_SHOW_ALL" => "N",    // Показывать ссылку "Все"
+            "PAGER_TEMPLATE" => ".default",    // Шаблон постраничной навигации
+            "PAGER_TITLE" => "Страница",    // Название категорий
+            "PROPERTY_CODE" => array(    // Свойства
+                0 => "",
+                1 => "",
+            ),
+            "SET_BROWSER_TITLE" => "Y",    // Устанавливать заголовок окна браузера
+            "SET_CANONICAL_URL" => "N",    // Устанавливать канонический URL
+            "SET_LAST_MODIFIED" => "N",    // Устанавливать в заголовках ответа время модификации страницы
+            "SET_META_DESCRIPTION" => "Y",    // Устанавливать описание страницы
+            "SET_META_KEYWORDS" => "Y",    // Устанавливать ключевые слова страницы
+            "SET_STATUS_404" => "N",    // Устанавливать статус 404
+            "SET_TITLE" => "Y",    // Устанавливать заголовок страницы
+            "SHOW_404" => "N",    // Показ специальной страницы
+            "STRICT_SECTION_CHECK" => "N",    // Строгая проверка раздела для показа элемента
+            "USE_PERMISSIONS" => "N",    // Использовать дополнительное ограничение доступа
+            "USE_SHARE" => "N",    // Отображать панель соц. закладок
+            "COMPONENT_TEMPLATE" => ".default"
+        ),
+        false
+    );
     ?>
+    <div class="row mb-2">
+        <?
+        $APPLICATION->IncludeComponent(
+            "bitrix:news.detail",
+            "submain_news",
+            array(
+                "ACTIVE_DATE_FORMAT" => "j F Y",    // Формат показа даты
+                "ADD_ELEMENT_CHAIN" => "N",    // Включать название элемента в цепочку навигации
+                "ADD_SECTIONS_CHAIN" => "Y",    // Включать раздел в цепочку навигации
+                "AJAX_MODE" => "N",    // Включить режим AJAX
+                "AJAX_OPTION_ADDITIONAL" => "",    // Дополнительный идентификатор
+                "AJAX_OPTION_HISTORY" => "N",    // Включить эмуляцию навигации браузера
+                "AJAX_OPTION_JUMP" => "N",    // Включить прокрутку к началу компонента
+                "AJAX_OPTION_STYLE" => "Y",    // Включить подгрузку стилей
+                "BROWSER_TITLE" => "-",    // Установить заголовок окна браузера из свойства
+                "CACHE_GROUPS" => "Y",    // Учитывать права доступа
+                "CACHE_TIME" => "36000000",    // Время кеширования (сек.)
+                "CACHE_TYPE" => "A",    // Тип кеширования
+                "CHECK_DATES" => "Y",    // Показывать только активные на данный момент элементы
+                "DETAIL_URL" => "",    // URL страницы детального просмотра (по умолчанию - из настроек инфоблока)
+                "DISPLAY_BOTTOM_PAGER" => "Y",    // Выводить под списком
+                "DISPLAY_DATE" => "Y",    // Выводить дату элемента
+                "DISPLAY_NAME" => "Y",    // Выводить название элемента
+                "DISPLAY_PICTURE" => "Y",    // Выводить детальное изображение
+                "DISPLAY_PREVIEW_TEXT" => "Y",    // Выводить текст анонса
+                "DISPLAY_TOP_PAGER" => "N",    // Выводить над списком
+                "ELEMENT_CODE" => "",    // Код новости
+                "ELEMENT_ID" => "9",    // ID новости
+                "FIELD_CODE" => array(    // Поля
+                    0 => "",
+                    1 => "",
+                ),
+                "IBLOCK_ID" => "4",    // Код информационного блока
+                "IBLOCK_TYPE" => "novosti",    // Тип информационного блока (используется только для проверки)
+                "IBLOCK_URL" => "",    // URL страницы просмотра списка элементов (по умолчанию - из настроек инфоблока)
+                "INCLUDE_IBLOCK_INTO_CHAIN" => "Y",    // Включать инфоблок в цепочку навигации
+                "MESSAGE_404" => "",    // Сообщение для показа (по умолчанию из компонента)
+                "META_DESCRIPTION" => "-",    // Установить описание страницы из свойства
+                "META_KEYWORDS" => "-",    // Установить ключевые слова страницы из свойства
+                "PAGER_BASE_LINK_ENABLE" => "N",    // Включить обработку ссылок
+                "PAGER_SHOW_ALL" => "N",    // Показывать ссылку "Все"
+                "PAGER_TEMPLATE" => ".default",    // Шаблон постраничной навигации
+                "PAGER_TITLE" => "Страница",    // Название категорий
+                "PROPERTY_CODE" => array(    // Свойства
+                    0 => "",
+                    1 => "",
+                ),
+                "SET_BROWSER_TITLE" => "Y",    // Устанавливать заголовок окна браузера
+                "SET_CANONICAL_URL" => "N",    // Устанавливать канонический URL
+                "SET_LAST_MODIFIED" => "N",    // Устанавливать в заголовках ответа время модификации страницы
+                "SET_META_DESCRIPTION" => "Y",    // Устанавливать описание страницы
+                "SET_META_KEYWORDS" => "Y",    // Устанавливать ключевые слова страницы
+                "SET_STATUS_404" => "N",    // Устанавливать статус 404
+                "SET_TITLE" => "Y",    // Устанавливать заголовок страницы
+                "SHOW_404" => "N",    // Показ специальной страницы
+                "STRICT_SECTION_CHECK" => "N",    // Строгая проверка раздела для показа элемента
+                "USE_PERMISSIONS" => "N",    // Использовать дополнительное ограничение доступа
+                "USE_SHARE" => "N",    // Отображать панель соц. закладок
+                "COMPONENT_TEMPLATE" => ".default"
+            ),
+            false
+        );
+        $APPLICATION->IncludeComponent(
+            "bitrix:news.detail",
+            "submain_news",
+            array(
+                "ACTIVE_DATE_FORMAT" => "j F Y",    // Формат показа даты
+                "ADD_ELEMENT_CHAIN" => "N",    // Включать название элемента в цепочку навигации
+                "ADD_SECTIONS_CHAIN" => "Y",    // Включать раздел в цепочку навигации
+                "AJAX_MODE" => "N",    // Включить режим AJAX
+                "AJAX_OPTION_ADDITIONAL" => "",    // Дополнительный идентификатор
+                "AJAX_OPTION_HISTORY" => "N",    // Включить эмуляцию навигации браузера
+                "AJAX_OPTION_JUMP" => "N",    // Включить прокрутку к началу компонента
+                "AJAX_OPTION_STYLE" => "Y",    // Включить подгрузку стилей
+                "BROWSER_TITLE" => "-",    // Установить заголовок окна браузера из свойства
+                "CACHE_GROUPS" => "Y",    // Учитывать права доступа
+                "CACHE_TIME" => "36000000",    // Время кеширования (сек.)
+                "CACHE_TYPE" => "A",    // Тип кеширования
+                "CHECK_DATES" => "Y",    // Показывать только активные на данный момент элементы
+                "DETAIL_URL" => "",    // URL страницы детального просмотра (по умолчанию - из настроек инфоблока)
+                "DISPLAY_BOTTOM_PAGER" => "Y",    // Выводить под списком
+                "DISPLAY_DATE" => "Y",    // Выводить дату элемента
+                "DISPLAY_NAME" => "Y",    // Выводить название элемента
+                "DISPLAY_PICTURE" => "Y",    // Выводить детальное изображение
+                "DISPLAY_PREVIEW_TEXT" => "Y",    // Выводить текст анонса
+                "DISPLAY_TOP_PAGER" => "N",    // Выводить над списком
+                "ELEMENT_CODE" => "",    // Код новости
+                "ELEMENT_ID" => "10",    // ID новости
+                "FIELD_CODE" => array(    // Поля
+                    0 => "",
+                    1 => "",
+                ),
+                "IBLOCK_ID" => "4",    // Код информационного блока
+                "IBLOCK_TYPE" => "novosti",    // Тип информационного блока (используется только для проверки)
+                "IBLOCK_URL" => "",    // URL страницы просмотра списка элементов (по умолчанию - из настроек инфоблока)
+                "INCLUDE_IBLOCK_INTO_CHAIN" => "Y",    // Включать инфоблок в цепочку навигации
+                "MESSAGE_404" => "",    // Сообщение для показа (по умолчанию из компонента)
+                "META_DESCRIPTION" => "-",    // Установить описание страницы из свойства
+                "META_KEYWORDS" => "-",    // Установить ключевые слова страницы из свойства
+                "PAGER_BASE_LINK_ENABLE" => "N",    // Включить обработку ссылок
+                "PAGER_SHOW_ALL" => "N",    // Показывать ссылку "Все"
+                "PAGER_TEMPLATE" => ".default",    // Шаблон постраничной навигации
+                "PAGER_TITLE" => "Страница",    // Название категорий
+                "PROPERTY_CODE" => array(    // Свойства
+                    0 => "",
+                    1 => "",
+                ),
+                "SET_BROWSER_TITLE" => "Y",    // Устанавливать заголовок окна браузера
+                "SET_CANONICAL_URL" => "N",    // Устанавливать канонический URL
+                "SET_LAST_MODIFIED" => "N",    // Устанавливать в заголовках ответа время модификации страницы
+                "SET_META_DESCRIPTION" => "Y",    // Устанавливать описание страницы
+                "SET_META_KEYWORDS" => "Y",    // Устанавливать ключевые слова страницы
+                "SET_STATUS_404" => "N",    // Устанавливать статус 404
+                "SET_TITLE" => "Y",    // Устанавливать заголовок страницы
+                "SHOW_404" => "N",    // Показ специальной страницы
+                "STRICT_SECTION_CHECK" => "N",    // Строгая проверка раздела для показа элемента
+                "USE_PERMISSIONS" => "N",    // Использовать дополнительное ограничение доступа
+                "USE_SHARE" => "N",    // Отображать панель соц. закладок
+                "COMPONENT_TEMPLATE" => ".default"
+            ),
+            false
+        );
+        ?>
+    </div>
 </div>
 
 <main role="main" class="container">
