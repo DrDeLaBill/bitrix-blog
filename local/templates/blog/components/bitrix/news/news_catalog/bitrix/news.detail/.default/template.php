@@ -16,7 +16,7 @@ $this->setFrameMode(true);
 	<?if(is_array($arResult["DETAIL_PICTURE"])):?>
     <div class="col-sm-4">
 		<img
-            class="card-img-right flex-auto d-none d-md-block"
+            class="rounded float-left"
 			border="0"
 			src="<?=$arResult["DETAIL_PICTURE"]["SRC"]?>"
 			width="300px"

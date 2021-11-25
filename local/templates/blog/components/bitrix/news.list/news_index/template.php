@@ -22,6 +22,9 @@ if ($arParams["DISPLAY_TOP_PAGER"]): ?>
 <?
 endif; ?>
 <?
+if (empty($arResult['ITEMS'])) {
+    echo '<p class="blog-post-meta">Нет новостей</p>';
+}
 foreach ($arResult["ITEMS"] as $arItem): ?>
     <?
     $this->AddEditAction(
@@ -38,7 +41,7 @@ foreach ($arResult["ITEMS"] as $arItem): ?>
     ?>
     <h2 class="blog-post-title">
         <a href="<?
-        echo $arItem["DETAIL_PAGE_URL"] ?>/">
+        echo $arItem["DETAIL_PAGE_URL"] ?>">
             <?
             echo $arItem["NAME"] ?>
         </a>

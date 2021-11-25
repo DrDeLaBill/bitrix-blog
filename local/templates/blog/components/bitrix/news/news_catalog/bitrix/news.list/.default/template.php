@@ -16,14 +16,18 @@ $this->setFrameMode(true);
 <?if($arParams["DISPLAY_TOP_PAGER"]):?>
 	<?=$arResult["NAV_STRING"]?><br />
 <?endif;?>
-<?foreach($arResult["ITEMS"] as $arItem):?>
+<?
+if (empty($arResult['ITEMS'])) {
+    echo '<p class="blog-post-meta">Нет новостей</p>';
+}
+foreach($arResult["ITEMS"] as $arItem):?>
 	<?
 	$this->AddEditAction($arItem['ID'], $arItem['EDIT_LINK'], CIBlock::GetArrayByID($arItem["IBLOCK_ID"], "ELEMENT_EDIT"));
 	$this->AddDeleteAction($arItem['ID'], $arItem['DELETE_LINK'], CIBlock::GetArrayByID($arItem["IBLOCK_ID"], "ELEMENT_DELETE"), array("CONFIRM" => GetMessage('CT_BNL_ELEMENT_DELETE_CONFIRM')));
 	?>
     <h2 class="blog-post-title">
         <a href="<?
-        echo $arItem["DETAIL_PAGE_URL"] ?>/">
+        echo $arItem["DETAIL_PAGE_URL"] ?>">
             <?
             echo $arItem["NAME"] ?>
         </a>

@@ -9,6 +9,7 @@ if (!defined("B_PROLOG_INCLUDED") || B_PROLOG_INCLUDED !== true) {
 use Bitrix\Main\Page\Asset;
 
 $APPLICATION->SetPageProperty("title", "Блог");
+$APPLICATION->SetTitle('Блог');
 
 ?>
 
@@ -16,6 +17,7 @@ $APPLICATION->SetPageProperty("title", "Блог");
 
 <html lang="ru">
 <head>
+    <title><? $APPLICATION->ShowTitle(); ?></title>
     <?php
     $APPLICATION->ShowHead();
     Asset::getInstance()->addCss(DEFAULT_TEMPLATE_PATH . '/css/bootstrap.min.css');
@@ -49,13 +51,8 @@ $APPLICATION->SetPageProperty("title", "Блог");
                     $APPLICATION->ShowTitle(); ?></a>
             </div>
             <div class="col-4 d-flex justify-content-end align-items-center">
-                <a class="text-muted" href="https://getbootstrap.com/docs/4.0/examples/blog/#">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none"
-                         stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
-                         class="mx-3">
-                        <circle cx="10.5" cy="10.5" r="7.5"></circle>
-                        <line x1="21" y1="21" x2="15.8" y2="15.8"></line>
-                    </svg>
+                <a class="text-muted" href="/novosti/obratnaya-svyaz.php">
+                    Обратная связь
                 </a>
             </div>
         </div>
@@ -65,8 +62,8 @@ $APPLICATION->SetPageProperty("title", "Блог");
         <nav class="nav d-flex justify-content-between">
             <?
             $APPLICATION->IncludeComponent(
-                "bitrix:catalog.section.list",
-                "categoties",
+	"bitrix:catalog.section.list", 
+	"categoties", 
                 array(
                     "ADD_SECTIONS_CHAIN" => "Y",
                     "CACHE_FILTER" => "N",
@@ -77,8 +74,8 @@ $APPLICATION->SetPageProperty("title", "Блог");
                     "COUNT_ELEMENTS" => "Y",
                     "COUNT_ELEMENTS_FILTER" => "CNT_ACTIVE",
                     "FILTER_NAME" => "sectionsFilter",
-                    "IBLOCK_ID" => "8",
-                    "IBLOCK_TYPE" => "blog",
+                    "IBLOCK_ID" => "4",
+                    "IBLOCK_TYPE" => "novosti",
                     "SECTION_CODE" => "",
                     "SECTION_FIELDS" => array(
                         0 => "",
@@ -105,101 +102,153 @@ $APPLICATION->SetPageProperty("title", "Блог");
         $arSort = array("NAME" => "ASC");
         $arSelect = array("ID", "NAME", "PREVIEW_TEXT", "DETAIL_PAGE_URL", "PREVIEW_PICTURE");
         $arFilter = array(
-            "IBLOCK_ID" => 8,
+            "IBLOCK_ID" => 4,
             "NAME" => "Создание блога"
         );
 
         $blogCreationNews = CIBlockElement::GetList($arSort, $arFilter, false, false, $arSelect);
-        $blogCreationProperties = $blogCreationNews->GetNextElement()->GetFields();
+        if ($blogCreationNews->SelectedRowsCount() == 0) {
+            ?>
+                <div class="jumbotron p-3 p-md-5 text-white rounded bg-dark">
+                    <div class="col-md-6 px-0">
+                        <h1 class="display-4 font-italic">Заголовок</h1>
+                        <p class="lead my-3">Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</p>
+                        <p class="lead mb-0"><a href="/novosti/" class="text-white font-weight-bold">Продолжить чтение...</a></p>
+                    </div>
+                </div>
+            <?
+        } else {
+            $blogCreationProperties = $blogCreationNews->GetNextElement()->GetFields();
+            ?>
+                <div class="jumbotron p-3 p-md-5 text-white rounded bg-dark">
+                    <div class="col-md-6 px-0">
+                        <h1 class="display-4 font-italic"><?
+                            echo $blogCreationProperties['NAME'] ?></h1>
+                        <p class="lead my-3"><?
+                            echo $blogCreationProperties['PREVIEW_TEXT'] ?></p>
+                        <p class="lead mb-0"><a href="<?
+                            echo $blogCreationProperties['DETAIL_PAGE_URL'] ?>"
+                                                class="text-white font-weight-bold">Продолжить чтение...</a></p>
+                    </div>
+                </div>
+        <?
+        }
         ?>
-
-        <div class="jumbotron p-3 p-md-5 text-white rounded bg-dark">
-            <div class="col-md-6 px-0">
-                <h1 class="display-4 font-italic"><?
-                    echo $blogCreationProperties['NAME'] ?></h1>
-                <p class="lead my-3"><?
-                    echo $blogCreationProperties['PREVIEW_TEXT'] ?></p>
-                <p class="lead mb-0"><a href="<?
-                    echo $blogCreationProperties['DETAIL_PAGE_URL'] ?>/"
-                                        class="text-white font-weight-bold">Продолжить чтение...</a></p>
-            </div>
-        </div>
-
         <div class="row mb-2">
             <?
             $arFilter['NAME'] = "Одна важная запись";
 
             $first = CIBlockElement::GetList($arSort, $arFilter, false, false, $arSelect);
-            $firstProperties = $first->GetNextElement()->GetFields();
-            ?>
-            <div class="col-md-6">
-                <div class="card flex-md-row mb-4 box-shadow h-md-250">
-                    <div class="card-body d-flex flex-column align-items-start">
-                        <h3 class="mb-0">
-                            <a class="text-dark" href="https://getbootstrap.com/docs/4.0/examples/blog/#"><?
-                                echo $firstProperties['NAME'] ?><a>
-                        </h3>
-                        <div class="mb-1 text-muted">
-                            <?
-                            $firstProperties["DATE_CREATE"] = "j F";
-                            echo CIBlockFormatProperties::DateFormat(
-                                $firstProperties["DATE_CREATE"],
-                                MakeTimeStamp(
-                                    $arElement["DATE_CREATE"],
-                                    CSite::GetDateFormat()
-                                )
-                            );
-                            ?>
+
+            if ($first->SelectedRowsCount() == 0) {
+                ?>
+                <div class="col-md-6">
+                    <div class="card flex-md-row mb-4 box-shadow h-md-250">
+                        <div class="card-body d-flex flex-column align-items-start">
+                            <h3 class="mb-0">
+                                <a class="text-dark" href="/novosti/">Заголовок 2<a>
+                            </h3>
+                            <p class="card-text mb-auto">
+                                Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
+                            </p>
+                            <a href="/novosti/">Продолжить чтение...</a>
                         </div>
-                        <p class="card-text mb-auto"><?
-                            echo $firstProperties['PREVIEW_TEXT'] ?></p>
-                        <a href="<?
-                        echo $firstProperties['DETAIL_PAGE_URL'] ?>/">Продолжить чтение...</a>
                     </div>
-                    <img class="card-img-right flex-auto d-none d-md-block"
-                         alt="Thumbnail [200x250]" style="width: 200px; height: 250px;"
-                         src="<?
-                         echo CFile::GetPath($firstProperties['PREVIEW_PICTURE']) ?>"
-                         data-holder-rendered="true">
                 </div>
-            </div>
+            <?
+            } else {
+                $firstProperties = $first->GetNextElement()->GetFields();
+                ?>
+                    <div class="col-md-6">
+                        <div class="card flex-md-row mb-4 box-shadow h-md-250">
+                            <div class="card-body d-flex flex-column align-items-start">
+                                <h3 class="mb-0">
+                                    <a class="text-dark" href="<? echo $firstProperties['DETAIL_PAGE_URL'] ?>"><?
+                                        echo $firstProperties['NAME'] ?><a>
+                                </h3>
+                                <div class="mb-1 text-muted">
+                                    <?
+                                    $firstProperties["DATE_CREATE"] = "j F";
+                                    echo CIBlockFormatProperties::DateFormat(
+                                        $firstProperties["DATE_CREATE"],
+                                        MakeTimeStamp(
+                                            $arElement["DATE_CREATE"],
+                                            CSite::GetDateFormat()
+                                        )
+                                    );
+                                    ?>
+                                </div>
+                                <p class="card-text mb-auto"><?
+                                    echo $firstProperties['PREVIEW_TEXT'] ?></p>
+                                <a href="<? echo $firstProperties['DETAIL_PAGE_URL'] ?>">Продолжить чтение...</a>
+                            </div>
+                            <img class="card-img-right flex-auto d-none d-md-block"
+                                 alt="Thumbnail [200x250]" style="width: 200px; height: 250px;"
+                                 src="<?
+                                 echo CFile::GetPath($firstProperties['PREVIEW_PICTURE']) ?>"
+                                 data-holder-rendered="true">
+                        </div>
+                    </div>
+                <?
+            }
+            ?>
             <?
             $arFilter['NAME'] = "Другая важная запись";
 
             $second = CIBlockElement::GetList($arSort, $arFilter, false, false, $arSelect);
-            $secondProperties = $second->GetNextElement()->GetFields();
+
+            if ($first->SelectedRowsCount() == 0) {
             ?>
-            <div class="col-md-6">
-                <div class="card flex-md-row mb-4 box-shadow h-md-250">
-                    <div class="card-body d-flex flex-column align-items-start">
-                        <h3 class="mb-0">
-                            <a class="text-dark" href="https://getbootstrap.com/docs/4.0/examples/blog/#"><?
-                                echo $secondProperties['NAME'] ?><a>
-                        </h3>
-                        <div class="mb-1 text-muted">
-                            <?
-                            $secondProperties["DATE_CREATE"] = "j F";
-                            echo CIBlockFormatProperties::DateFormat(
-                                $firstProperties["DATE_CREATE"],
-                                MakeTimeStamp(
-                                    $arElement["DATE_CREATE"],
-                                    CSite::GetDateFormat()
-                                )
-                            );
-                            ?>
+                <div class="col-md-6">
+                    <div class="card flex-md-row mb-4 box-shadow h-md-250">
+                        <div class="card-body d-flex flex-column align-items-start">
+                            <h3 class="mb-0">
+                                <a class="text-dark" href="/novosti/">Заголовок 3<a>
+                            </h3>
+                            <p class="card-text mb-auto">
+                                Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
+                            </p>
+                            <a href="/novosti/">Продолжить чтение...</a>
                         </div>
-                        <p class="card-text mb-auto"><?
-                            echo $secondProperties['PREVIEW_TEXT'] ?></p>
-                        <a href="<?
-                        echo $secondProperties['DETAIL_PAGE_URL'] ?>/">Продолжить чтение...</a>
                     </div>
-                    <img class="card-img-right flex-auto d-none d-md-block"
-                         alt="Thumbnail [200x250]" style="width: 200px; height: 250px;"
-                         src="<?
-                         echo CFile::GetPath($secondProperties['PREVIEW_PICTURE']) ?>"
-                         data-holder-rendered="true">
                 </div>
-            </div>
+            <?
+            } else {
+                $secondProperties = $second->GetNextElement()->GetFields();
+            ?>
+                <div class="col-md-6">
+                    <div class="card flex-md-row mb-4 box-shadow h-md-250">
+                        <div class="card-body d-flex flex-column align-items-start">
+                            <h3 class="mb-0">
+                                <a class="text-dark" href="<? echo $secondProperties['DETAIL_PAGE_URL'] ?>"><?
+                                    echo $secondProperties['NAME'] ?><a>
+                            </h3>
+                            <div class="mb-1 text-muted">
+                                <?
+                                $secondProperties["DATE_CREATE"] = "j F";
+                                echo CIBlockFormatProperties::DateFormat(
+                                    $firstProperties["DATE_CREATE"],
+                                    MakeTimeStamp(
+                                        $arElement["DATE_CREATE"],
+                                        CSite::GetDateFormat()
+                                    )
+                                );
+                                ?>
+                            </div>
+                            <p class="card-text mb-auto"><?
+                                echo $secondProperties['PREVIEW_TEXT'] ?></p>
+                            <a href="<? echo $secondProperties['DETAIL_PAGE_URL'] ?>">Продолжить чтение...</a>
+                        </div>
+                        <img class="card-img-right flex-auto d-none d-md-block"
+                             alt="Thumbnail [200x250]" style="width: 200px; height: 250px;"
+                             src="<?
+                             echo CFile::GetPath($secondProperties['PREVIEW_PICTURE']) ?>"
+                             data-holder-rendered="true">
+                    </div>
+                </div>
+            <?
+            }
+            ?>
         </div>
 
         <?
