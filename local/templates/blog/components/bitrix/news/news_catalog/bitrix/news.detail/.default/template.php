@@ -31,13 +31,7 @@ $this->setFrameMode(true);
         <?endif;?>
 
         <p class="blog-post-meta">
-            <? echo CIBlockFormatProperties::DateFormat(
-                    $arParams["ACTIVE_DATE_FORMAT"],
-                    MakeTimeStamp(
-                            $arElement["DATE_CREATE"],
-                            CSite::GetDateFormat()
-                    )
-            );?>
+            <? echo  $arResult["DISPLAY_ACTIVE_FROM"]; ?>
         </p>
         <?if($arResult["DETAIL_TEXT"] <> ''):?>
             <?echo $arResult["DETAIL_TEXT"];?>

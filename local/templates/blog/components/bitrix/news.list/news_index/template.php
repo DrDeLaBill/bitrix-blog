@@ -47,13 +47,7 @@ foreach ($arResult["ITEMS"] as $arItem): ?>
         </a>
     </h2>
     <p class="blog-post-meta">
-        <? echo CIBlockFormatProperties::DateFormat(
-            $arParams["ACTIVE_DATE_FORMAT"],
-            MakeTimeStamp(
-                $arItem["DATE_CREATE"],
-                CSite::GetDateFormat()
-            )
-        );?>
+        <? echo  $arItem["DISPLAY_ACTIVE_FROM"]; ?>
     </p>
     <p>
         <?

@@ -21,13 +21,7 @@ $this->setFrameMode(true);
                     echo $arResult['NAME'] ?><a>
             </h3>
             <div class="mb-1 text-muted">
-                <? echo CIBlockFormatProperties::DateFormat(
-                    $arParams["ACTIVE_DATE_FORMAT"],
-                    MakeTimeStamp(
-                        $arElement["DATE_CREATE"],
-                        CSite::GetDateFormat()
-                    )
-                );?>
+                <? echo  $arResult["DISPLAY_ACTIVE_FROM"]; ?>
             </div>
             <p class="card-text mb-auto"><?
                 echo $arResult['PREVIEW_TEXT'] ?></p>
