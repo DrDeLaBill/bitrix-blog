@@ -286,3 +286,7 @@ $APPLICATION->SetPageProperty("title", "Блог");
 </div>
 
 <main role="main" class="container">
+
+<?php
+
+    CIBlockElement::GetList();
