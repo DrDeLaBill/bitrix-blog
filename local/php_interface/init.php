@@ -1,21 +1,5 @@
 <?php
 
-AddEventHandler('iblock', 'OnBeforeIBlockElementUpdate', Array(
-    'NewsHandler',
-    'onBeforeIBlockElementUpdateHandler'
-));
-AddEventHandler('iblock', 'OnBeforeIBlockElementAdd', Array(
-    'NewsHandler',
-    'onBeforeIBlockElementUpdateHandler'
-));
+require dirname(__FILE__) . '/constants.php';
 
-class NewsHandler {
-    function onBeforeIBlockElementUpdateHandler(&$arFields) {
-        $addedStr = '[не активно]';
-        if ($arFields['ACTIVE'] == 'N') {
-            $arFields['NAME'] = $addedStr . $arFields['NAME'];
-        } else {
-            $arFields['NAME'] = str_replace($addedStr, "", $arFields['NAME']);
-        }
-    }
-}
+require dirname(__FILE__) . '/event_handler.php';

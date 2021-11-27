@@ -60,3 +60,5 @@ Thumbs.db
 /bitrix/html_pages/
 /bitrix/blocks/
 /bitrix/resize_cache/
+
+/local/php_interface/constants.php
